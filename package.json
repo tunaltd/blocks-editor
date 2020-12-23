@@ -1,0 +1,52 @@
+{
+  "name": "blocks-editor",
+  "version": "1.0.0",
+  "description": "BlocksEditor - Blocks editor based on editor.js",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@editorjs/editorjs": "^2.19.1",
+    "@editorjs/header": "^2.6.1",
+    "@editorjs/list": "^1.6.1",
+    "@editorjs/paragraph": "^2.8.0",
+    "@editorjs/underline": "^1.0.0",
+    "editorjs-alert": "^1.0.3",
+    "lodash": "^4.17.20"
+  },
+  "devDependencies": {
+    "@editorjs/checklist": "^1.3.0",
+    "@editorjs/code": "^2.6.0",
+    "@editorjs/delimiter": "^1.2.0",
+    "@editorjs/embed": "^2.4.0",
+    "@editorjs/inline-code": "^1.3.1",
+    "@editorjs/link": "^2.3.1",
+    "@editorjs/marker": "^1.2.2",
+    "@editorjs/personality": "^2.0.2",
+    "@editorjs/quote": "^2.4.0",
+    "@editorjs/table": "^1.3.0",
+    "@editorjs/warning": "^1.2.0",
+    "@types/lodash": "^4.14.165",
+    "clean-webpack-plugin": "^3.0.0",
+    "editorjs-inline-image": "^0.1.1",
+    "html-webpack-plugin": "^4.5.0",
+    "ts-loader": "^8.0.11",
+    "typescript": "^4.1.2",
+    "webpack": "^5.9.0",
+    "webpack-cli": "^4.2.0",
+    "webpack-merge": "^5.4.0"
+  },
+  "scripts": {
+    "start": "webpack serve --open --config webpack.dev.js",
+    "build": "webpack --config webpack.prod.js"
+  },
+  "keywords": [
+    "codex editor",
+    "text editor",
+    "editor",
+    "editor.js",
+    "editorjs",
+    "json",
+    "blocks"
+  ],
+  "author": "Jerin Lee",
+  "license": "Apache License 2.0"
+}
