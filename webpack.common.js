@@ -39,7 +39,8 @@ module.exports = {
   output: {
     filename: 'blocks-editor.js',
     path: path.resolve(__dirname, 'dist'),
-    library: 'App',
+    library: 'BlocksEditor',
+    libraryExport: 'default',
     libraryTarget: 'umd',
   },
 };

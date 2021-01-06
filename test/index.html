@@ -12,6 +12,13 @@
     <script type="text/javascript" src="https://unpkg.com/lodash@4.17.20/lodash.js" prefetch></script>
     <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
     <script src="../editor.js/editor.js?v=202012231203"></script>
-    <script src="../dist/blocks-editor.js?v=202012231739" defer></script>
+    <script src="../dist/blocks-editor.js?v=202101051825"></script>
+    <script>
+      const blocksEditor = new BlocksEditor("app", { blocks: [] }, {
+        onCurrentBlockChanged: (blockId) =>{
+          console.log("Current block id: "+ blockId);
+        }
+      });
+    </script>
   </body>
 </html>

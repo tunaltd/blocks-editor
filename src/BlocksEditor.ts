@@ -18,7 +18,7 @@ const List = require('@editorjs/list');//import List from '@editorjs/list';
 const Personality = require('@editorjs/personality');
 const InlineImage = require('editorjs-inline-image');//import InlineImage from 'editorjs-inline-image';
 
-import * as _ from 'lodash';
+//import * as _ from 'lodash';
 
 class BlockIdCache{
     id: string;
@@ -26,23 +26,33 @@ class BlockIdCache{
     type: string;
 }
 
+export class EditorOptions{
+    onContentChanged: Function;
+    onCurrentBlockChanged: Function;
+}
+
 export class BlocksEditor {
     readonly BlockElementIdPrefix: string = "block_";
     blocksIdsCache: Array<BlockIdCache>;
 
     eleId: string;
+
+    // Events
+    onContentChanged: Function;
     onCurrentBlockChanged: Function;
 
     editor: EditorJS;
 
     lastBlockId: string;
 
-    constructor(eleId: string, onCurrentBlockChanged: Function){
+    constructor(eleId: string, content: OutputData, options: EditorOptions){
         this.eleId = eleId;
-        this.onCurrentBlockChanged = onCurrentBlockChanged;
+        this.onContentChanged = options.onContentChanged;
+        this.onCurrentBlockChanged = options.onCurrentBlockChanged;
+        this.initialize(content);
     }
 
-    initialize(defaultContent: OutputData){
+    private initialize(defaultContent: OutputData){
         const ctx = this;
         this.editor = new EditorJS({
             holder: this.eleId,
@@ -129,6 +139,11 @@ export class BlocksEditor {
                 // });
 
                 ctx.processBlocks();
+                api.saver.save().then((savedData) => {
+                    if(ctx.onContentChanged) {
+                        ctx.onContentChanged(savedData);
+                    }
+                });
             }
         });
 
@@ -151,7 +166,7 @@ export class BlocksEditor {
         // })
     }
 
-    processBlocks(){
+    private processBlocks(){
         const count = this.editor.blocks.getBlocksCount();
         this.blocksIdsCache = [];
         for(let i = 0; i < count; i++){
@@ -169,8 +184,14 @@ export class BlocksEditor {
         } // for
     }
 
-    async refresh(content: OutputData){
+    public async setContentAsync(content: OutputData){
+        this.editor.clear();
         await this.editor.render(content);
+    }
+
+    public async getContentAsync() {
+        const data = await this.editor.save();
+        return data;
     }
 
 }
