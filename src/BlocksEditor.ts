@@ -17,6 +17,7 @@ const Checklist = require('@editorjs/checklist');
 const List = require('@editorjs/list');//import List from '@editorjs/list';
 const Personality = require('@editorjs/personality');
 const InlineImage = require('editorjs-inline-image');//import InlineImage from 'editorjs-inline-image';
+import TextSpolier from './components/editorjs-inline-spoiler-tool';//const TextSpoiler = require('editorjs-inline-spoiler-tool');
 
 //import * as _ from 'lodash';
 
@@ -121,6 +122,7 @@ export class BlocksEditor {
                     inlineToolbar: true,
                     shortcut: 'CMD+ALT+T'
                 },
+                TextSpolier: TextSpolier,
                 // loreMind: FEF.Modules.LoreCard_Mind,
                 // loreSection: FEF.Modules.LoreCard_Section,
                 // loreList: FEF.Modules.LoreCard_List

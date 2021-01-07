@@ -28,6 +28,8 @@
     "clean-webpack-plugin": "^3.0.0",
     "editorjs-inline-image": "^0.1.1",
     "html-webpack-plugin": "^4.5.0",
+    "css-loader": "^5.0.1",
+    "style-loader": "^2.0.0",
     "ts-loader": "^8.0.11",
     "typescript": "^4.1.2",
     "webpack": "^5.9.0",

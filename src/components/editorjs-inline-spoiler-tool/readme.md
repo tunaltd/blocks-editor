@@ -1,0 +1,1 @@
+Ref: https://www.jsdelivr.com/package/npm/editorjs-inline-spoiler-tool
