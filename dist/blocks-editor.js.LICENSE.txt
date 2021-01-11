@@ -6,6 +6,15 @@
  */
 
 /**
+ * Base Paragraph Block for the Editor.js.
+ * Represents simple paragraph
+ *
+ * @author CodeX (team@codex.so)
+ * @copyright CodeX 2018
+ * @license The MIT License (MIT)
+ */
+
+/**
  * CodeTool for Editor.js
  *
  * @author CodeX (team@ifmo.su)

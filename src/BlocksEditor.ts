@@ -1,6 +1,7 @@
 'use strict';
 
 import EditorJS, { BlockAPI, OutputData } from '@editorjs/editorjs';
+const Paragraph = require('@editorjs/paragraph');
 const Header = require('@editorjs/header');
 const Marker = require('@editorjs/marker');
 const Underline = require('@editorjs/underline');//import Underline from '@editorjs/underline';
@@ -20,6 +21,7 @@ const Personality = require('@editorjs/personality');
 const InlineImage = require('editorjs-inline-image');//import InlineImage from 'editorjs-inline-image';
 import TextSpolier from './components/editorjs-inline-spoiler-tool';//const TextSpoiler = require('editorjs-inline-spoiler-tool');
 import MarkdownBlock from './components/markdown-block';
+import Hyperlink from './components/editorjs-hyperlink';
 
 //import * as _ from 'lodash';
 
@@ -61,9 +63,13 @@ export class BlocksEditor {
             holder: this.eleId,
             placeholder: 'Hello Blocks Editor, based on editor.js!',
             tools: {
+                paragraph: {
+                    class: Paragraph,
+                    inlineToolbar: ['bold', 'italic', 'underline', 'hyperlink', 'marker', 'inlineCode', 'textSpolier']
+                },
                 header: {
                     class: Header,
-                    inlineToolbar: true,//['link'],
+                    inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker'],
                     config: {
                         placeholder: 'Header'
                     },
@@ -71,19 +77,20 @@ export class BlocksEditor {
                 },
                 image: {
                     class: InlineImage, //ImageTool
+                    inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker']
                 },
                 list: {
                     class: List,
-                    inlineToolbar: true,
+                    inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker'],
                     shortcut: 'CMD+SHIFT+L'
                 },
                 checklist: {
                     class: Checklist,
-                    inlineToolbar: true,
+                    inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker'],
                 },
                 quote: {
                     class: Quote,
-                    inlineToolbar: true,
+                    inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker'],
                     config: {
                         quotePlaceholder: 'Enter a quote',
                         captionPlaceholder: 'Quote\'s author',
@@ -105,17 +112,17 @@ export class BlocksEditor {
                     class: InlineCode,
                     shortcut: 'CMD+SHIFT+C'
                 },
-                // hyperlink: { // Error
-                //     class: Hyperlink,
-                //     config: {
-                //         target: '_blank', // default null
-                //         rel: 'nofollow', // default null
-                //         // availableTargets: ['_blank', '_self'],
-                //         // availableRels: ['author', 'noreferrer'],
-                //         validate: false
-                //     },
-                //     shortcut: 'CMD+L',
-                // },
+                hyperlink: { // Error
+                    class: Hyperlink,
+                    config: {
+                        target: '_blank', // default null
+                        rel: 'nofollow', // default null
+                        // availableTargets: ['_blank', '_self'],
+                        // availableRels: ['author', 'noreferrer'],
+                        validate: false
+                    },
+                    shortcut: 'CMD+L',
+                },
                 // linkTool: { // https://github.com/editor-js/link
                 //     class: LinkTool,
                 //     config: {
@@ -132,7 +139,7 @@ export class BlocksEditor {
                 embed: Embed,
                 table: {
                     class: Table,
-                    inlineToolbar: true,
+                    inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker'],
                     shortcut: 'CMD+ALT+T'
                 },
                 textSpolier: TextSpolier,
@@ -141,6 +148,7 @@ export class BlocksEditor {
                 // loreSection: FEF.Modules.LoreCard_Section,
                 // loreList: FEF.Modules.LoreCard_List
             },
+            defaultBlock: "paragraph",
             data: defaultContent,
             onChange: function (api) {
                 // test 1.
