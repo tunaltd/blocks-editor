@@ -1,4 +1,5 @@
 const path = require('path');
+const svgToMiniDataURI = require('mini-svg-data-uri');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -17,11 +18,17 @@ module.exports = {
           'style-loader',
           'css-loader'
         ]
-      },
-      {
-        test: /\.svg$/,
-        type: 'asset/inline'
       }
+      // {
+      //   test: /\.svg$/,
+      //   type: 'asset/inline',
+      //   generator: {
+      //     dataUrl: content => {
+      //       content = content.toString();
+      //       return svgToMiniDataURI(content);
+      //     }
+      //   }
+      // }
     ],
   },
   resolve: {
