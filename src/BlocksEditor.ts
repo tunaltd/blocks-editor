@@ -5,7 +5,6 @@ const Paragraph = require('@editorjs/paragraph');
 const Header = require('@editorjs/header');
 const Marker = require('@editorjs/marker');
 const Underline = require('@editorjs/underline');//import Underline from '@editorjs/underline';
-//const Hyperlink = require('editorjs-hyperlink');
 const Delimiter = require('@editorjs/delimiter');
 const CodeTool = require('@editorjs/code');
 const InlineCode = require('@editorjs/inline-code');
@@ -14,11 +13,10 @@ const Warning = require('@editorjs/warning');
 const Alert = require('editorjs-alert');
 const Embed = require('@editorjs/embed');
 const Table = require('@editorjs/table');
-//const LinkTool = require('@editorjs/link');
 const Checklist = require('@editorjs/checklist');
 const List = require('@editorjs/list');//import List from '@editorjs/list';
 const Personality = require('@editorjs/personality');
-const InlineImage = require('editorjs-inline-image');//import InlineImage from 'editorjs-inline-image';
+import OneImage from './components/one-image';
 import TextSpolier from './components/editorjs-inline-spoiler-tool';//const TextSpoiler = require('editorjs-inline-spoiler-tool');
 import MarkdownBlock from './components/markdown-block';
 import Hyperlink from './components/editorjs-hyperlink';
@@ -31,7 +29,39 @@ class BlockIdCache{
     type: string;
 }
 
+export class ServerOptions{
+    appName: string;
+    clientKey: string;
+    /**
+     * Current username
+     */
+    user: string;
+    // search
+    enderpointSearch: string;
+    countPerPage: number = 10;
+    // upload
+    enderpointUpload: string;
+}
+
+export class UnsplashOptions{
+    appName: string;
+    clientKey: string;
+    // search
+    enderpointSearch: string;
+    countPerPage: number = 30;
+}
+
+export class ThirdAPIOptions{
+    server: ServerOptions;
+    unsplash: UnsplashOptions;
+}
+
 export class EditorOptions{
+    readOnly: false;
+    // properties
+    api: ThirdAPIOptions;
+
+    // callback events
     onContentChanged: Function;
     onCurrentBlockChanged: Function;
 }
@@ -41,6 +71,7 @@ export class BlocksEditor {
     blocksIdsCache: Array<BlockIdCache>;
 
     eleId: string;
+    options: EditorOptions;
 
     // Events
     onContentChanged: Function;
@@ -52,8 +83,10 @@ export class BlocksEditor {
 
     constructor(eleId: string, content: OutputData, options: EditorOptions){
         this.eleId = eleId;
+        this.options = options;
         this.onContentChanged = options.onContentChanged;
         this.onCurrentBlockChanged = options.onCurrentBlockChanged;
+
         this.initialize(content);
     }
 
@@ -75,9 +108,13 @@ export class BlocksEditor {
                     },
                     shortcut: 'CMD+SHIFT+H'
                 },
-                image: {
-                    class: InlineImage, //ImageTool
-                    inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker']
+                oneimage: {
+                    class: OneImage,
+                    inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker'],
+                    config: {
+                        server: this.options.api ? this.options.api.server : undefined,
+                        unsplash: this.options.api ? this.options.api.unsplash : undefined,
+                    }
                 },
                 list: {
                     class: List,
@@ -150,6 +187,7 @@ export class BlocksEditor {
             },
             defaultBlock: "paragraph",
             data: defaultContent,
+            readOnly: this.options.readOnly,
             onChange: function (api) {
                 // test 1.
                 // const blockIndex = api.blocks.getCurrentBlockIndex();
@@ -180,7 +218,7 @@ export class BlocksEditor {
                 if(currentBlock) {
                     if(currentBlock.id !== ctx.lastBlockId){
                         ctx.lastBlockId = currentBlock.id;
-                        if(ctx.onCurrentBlockChanged) ctx.onCurrentBlockChanged(currentBlock.id);
+                        if(ctx.onCurrentBlockChanged) ctx.onCurrentBlockChanged(currentBlock.id, blockIndex);
                     }
                 } // if(currentBlock)
             } // if(blockIndex >= 0)

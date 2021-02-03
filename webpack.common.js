@@ -1,5 +1,4 @@
 const path = require('path');
-const svgToMiniDataURI = require('mini-svg-data-uri');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 

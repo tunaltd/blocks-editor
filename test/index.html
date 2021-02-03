@@ -10,14 +10,24 @@
   <body>
     <div id="app" style="height: 600px;" class="container border bd-default"></div>
     <script type="text/javascript" src="https://unpkg.com/lodash@4.17.20/lodash.js" prefetch></script>
-    <script src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it@12.0.4/dist/markdown-it.min.js"></script>
-    <script src="../editor.js/editor.js?v=20210111"></script>
-    <script src="../dist/blocks-editor.js?v=202101111052"></script>
+    <script type="text/javascript" src="../lib/crypto-js.js"></script>
+    <script type="text/javascript" src="../lib/upload/flow.min.js"></script>
+    <script type="text/javascript" src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/markdown-it@12.0.4/dist/markdown-it.min.js"></script>
+    <script type="text/javascript" src="../lib/editor.js?v=20210114"></script>
+    <script type="text/javascript" src="../dist/blocks-editor.js?v=202102012103"></script>
     <script>
       const blocksEditor = new BlocksEditor("app", { blocks: [] }, {
-        onCurrentBlockChanged: (blockId) =>{
+        onCurrentBlockChanged: (blockId, blockIndex) => {
           console.log("Current block id: "+ blockId);
+        },
+        showError: (title, error) => {
+          const toast = Metro.toast.create;
+          toast(error, null, 5000, "bg-red fg-white");
+        },
+        showMessage: (title, message) => {
+          const toast = Metro.toast.create;
+          toast(message, null, 5000, "bg-green fg-white");
         }
       });
     </script>
