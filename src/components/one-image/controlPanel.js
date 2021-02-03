@@ -110,14 +110,16 @@ export default class ControlPanel {
     tabWrapper.appendChild(defaultTab);
     tabWrapper.appendChild(unsplashTab);
     tabWrapper.appendChild(uploadTab);
-    tabWrapper.appendChild(embedUrlTab);
+    if(this.config.supportEmbedUrl)
+      tabWrapper.appendChild(embedUrlTab);
 
     wrapper.appendChild(tabWrapper);
 
     wrapper.appendChild(defaultPanel);
     wrapper.appendChild(unsplashPanel);
     wrapper.appendChild(uploadPanel);
-    wrapper.appendChild(embedUrlPanel);
+    if(this.config.supportEmbedUrl)
+      wrapper.appendChild(embedUrlPanel);
 
     this.nodes.defaultPanel = defaultPanel;
     this.nodes.unsplashPanel = unsplashPanel;
