@@ -20,6 +20,7 @@ import OneImage from './components/one-image';
 import TextSpolier from './components/editorjs-inline-spoiler-tool';//const TextSpoiler = require('editorjs-inline-spoiler-tool');
 import MarkdownBlock from './components/markdown-block';
 import Hyperlink from './components/editorjs-hyperlink';
+import _ from 'lodash';
 
 //import * as _ from 'lodash';
 
@@ -114,6 +115,7 @@ export class BlocksEditor {
                     config: {
                         server: this.options.api ? this.options.api.server : undefined,
                         unsplash: this.options.api ? this.options.api.unsplash : undefined,
+                        supportEmbedUrl: true
                     }
                 },
                 list: {
@@ -256,4 +258,71 @@ export class BlocksEditor {
         return data;
     }
 
+    public getImages(): Array<ImageData> {
+        const count = this.editor.blocks.getBlocksCount();
+        const result = new Array<ImageData>();
+        for(let i = 0; i < count; i++){
+            const block = this.editor.blocks.getBlockByIndex(i) as BlockAPI;
+            if(block){ //  && !block.id
+                const blockHolder = block.holder; // .ce-block element, that wraps plugin contents
+                const allImgs = blockHolder.querySelectorAll("img");
+                if(allImgs){
+                    allImgs.forEach(ae => {
+                        const d = {
+                            title: ae.title,
+                            uri: ae.src
+                        };
+                        if(!ae.title){
+                            const caption = blockHolder.querySelector("div.inline-image__caption");
+                            if(caption)
+                                d.title = caption.innerHTML;
+                        }
+                        const index = _.findIndex(result, item => item.uri === d.uri);
+                        if(index < 0)
+                            result.push(d);
+                    });
+                }
+            }
+        } // for
+        return result;
+    }
+
+    public getHyperlinks(): Array<HyperlinkData> {
+        const count = this.editor.blocks.getBlocksCount();
+        const result = new Array<HyperlinkData>();
+        for(let i = 0; i < count; i++){
+            const block = this.editor.blocks.getBlockByIndex(i) as BlockAPI;
+            if(block){ //  && !block.id
+                const blockHolder = block.holder; // .ce-block element, that wraps plugin contents
+                const allAs = blockHolder.querySelectorAll("a");
+                if(allAs){
+                    allAs.forEach(ae => {
+                        const d = {
+                            name: ae.innerHTML,
+                            title: ae.title,
+                            uri: ae.href,
+                            rel: ae.rel
+                        };
+                        const index = _.findIndex(result, item => item.uri === d.uri);
+                        if(index < 0)
+                            result.push(d);
+                    });
+                }
+            }
+        } // for
+        return result;
+    }
+
+}
+
+export class ImageData{
+    title: string;
+    uri: string;
+}
+
+export class HyperlinkData{
+    name: string;
+    title: string;
+    uri: string;
+    rel: string;
 }
