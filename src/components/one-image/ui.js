@@ -90,22 +90,23 @@ export default class Ui {
   render(data) {
     const wrapper = make('div', [this.CSS.baseClass, this.CSS.wrapper]);
     const loader = make('div', this.CSS.loading);
-    const image = make('img', '', {
-      onload: () => this.onImageLoad(),
-      onerror: () => this.onImageLoadError(),
-    });
     const caption = make('div', [this.CSS.input, this.CSS.caption], {
       contentEditable: !this.readOnly,
       innerHTML: data.caption || '',
     });
     this.nodes.imageHolder = make('div', this.CSS.imageHolder);
-
-    caption.dataset.placeholder = 'Enter a caption';
+    const image = make('img', '', {
+      onload: () => this.onImageLoad(),
+      onerror: () => this.onImageLoadError(),
+    });
+    
+    if(!this.readOnly)
+      caption.dataset.placeholder = 'Enter a caption';
 
     if (data.url) {
       wrapper.appendChild(loader);
       image.src = data.url;
-      this.buildImageCredits(data, data.info.provider);
+      this.buildImageCredits(data);
     } else {
       const controlPanelWrapper = this.controlPanel.render();
       this.nodes.controlPanelWrapper = controlPanelWrapper;
@@ -130,8 +131,8 @@ export default class Ui {
    */
   buildImageCredits(imageData) {
     const info = imageData.info;
-    const provider = info.provider;//, data.info.provider
     if (info && info.author && info.profileLink) {
+      const provider = info.provider;//, data.info.provider
       const { appName } = this.config[provider];
       let credits;// = createUnsplashImageCredits({ ...info, appName });
       console.log("buildImageCredits.provider: " + provider);

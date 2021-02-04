@@ -257,7 +257,9 @@ export default class ControlPanel {
    */
   embedButtonClicked(imageUrl) {
     if (isUrl(imageUrl)) {
-      this.onSelectImage({ url: imageUrl });
+      this.onSelectImage({
+        url: imageUrl
+      });
     } else {
       this.api.notifier.show({
         message: 'Please enter a valid url.',

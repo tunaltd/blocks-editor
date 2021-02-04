@@ -15,19 +15,11 @@
     <script type="text/javascript" src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/markdown-it@12.0.4/dist/markdown-it.min.js"></script>
     <script type="text/javascript" src="../lib/editor.js?v=20210114"></script>
-    <script type="text/javascript" src="../dist/blocks-editor.js?v=202102012103"></script>
+    <script type="text/javascript" src="../dist/blocks-editor.js?v=202102041047"></script>
     <script>
       const blocksEditor = new BlocksEditor("app", { blocks: [] }, {
         onCurrentBlockChanged: (blockId, blockIndex) => {
           console.log("Current block id: "+ blockId);
-        },
-        showError: (title, error) => {
-          const toast = Metro.toast.create;
-          toast(error, null, 5000, "bg-red fg-white");
-        },
-        showMessage: (title, message) => {
-          const toast = Metro.toast.create;
-          toast(message, null, 5000, "bg-green fg-white");
         }
       });
     </script>
