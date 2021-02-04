@@ -217,7 +217,7 @@ export class BlocksEditor {
             //console.log("Current block index: "+ blockIndex);
             if(blockIndex >= 0) {
                 const currentBlock = ctx.editor.blocks.getBlockByIndex(blockIndex) as BlockAPI;
-                if(currentBlock) {
+                if(currentBlock && !currentBlock.isEmpty) {
                     if(currentBlock.id !== ctx.lastBlockId){
                         ctx.lastBlockId = currentBlock.id;
                         if(ctx.onCurrentBlockChanged) ctx.onCurrentBlockChanged(currentBlock.id, blockIndex);
@@ -235,7 +235,7 @@ export class BlocksEditor {
         this.blocksIdsCache = [];
         for(let i = 0; i < count; i++){
             const block = this.editor.blocks.getBlockByIndex(i) as BlockAPI;
-            if(block){ //  && !block.id
+            if(block && !block.isEmpty){ //  && !block.id
                 const ele = block.holder; // .ce-block element, that wraps plugin contents
                 ele.id = this.BlockElementIdPrefix + block.id;
 
