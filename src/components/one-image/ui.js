@@ -1,4 +1,4 @@
-import { make, createUnsplashImageCredits } from './helpers';
+import { make, createUnsplashImageCredits, createServerImageCredits } from './helpers';
 import Tunes from './tunes';
 import ControlPanel from './controlPanel';
 // import bgIcon from '../../assets/svg/backgroundIcon.svg';
