@@ -1,4 +1,4 @@
-import { make, isUrl, createUnsplashImageCredits } from './helpers';
+import { make, isUrl, createUnsplashImageCredits, createServerImageCredits } from './helpers';
 import UnsplashClient from './unsplashClient';
 import DefaultClient from './defaultClient';
 
@@ -337,7 +337,10 @@ export default class ControlPanel {
     const searchInput = make('div', [this.cssClasses.input, this.cssClasses.caption, this.cssClasses.search], {
       //id: 'default-search',
       contentEditable: !this.readOnly && !this.defaultClient.searchDisabled,
-      oninput: () => this.searchInputHandler(),
+      oninput: () => {
+        this.showSearchLoader(this.nodes.imageGallery0);//this.showUnsplashLoader();
+        this.performDefaultSearch();
+      },
     });
 
     searchInput.dataset.placeholder = 'Search for an image...';
@@ -362,7 +365,10 @@ export default class ControlPanel {
     const searchInput = make('div', [this.cssClasses.input, this.cssClasses.caption, this.cssClasses.search], {
       //id: 'unsplash-search',
       contentEditable: !this.readOnly && !this.unsplashClient.disabled,
-      oninput: () => this.searchUnsplashInputHandler(),
+      oninput: () => { // this.searchUnsplashInputHandler()
+        this.showSearchLoader(this.nodes.imageGallery);//this.showUnsplashLoader();
+        this.performUnsplashSearch();
+      },
     });
 
     searchInput.dataset.placeholder = 'Search for an image...';
@@ -386,15 +392,22 @@ export default class ControlPanel {
     this.performUnsplashSearch();
   }
 
+  showSearchLoader(imageGallery){
+    imageGallery.innerHTML = '';
+    this.nodes.loader = make('div', this.cssClasses.loading);
+    imageGallery.appendChild(this.nodes.loader);
+  }
+
   /**
    * Shows a loader spinner on image gallery
    *
    * @returns {void}
    */
   showUnsplashLoader() {
-    this.nodes.imageGallery.innerHTML = '';
-    this.nodes.loader = make('div', this.cssClasses.loading);
-    this.nodes.imageGallery.appendChild(this.nodes.loader);
+    // this.nodes.imageGallery.innerHTML = '';
+    // this.nodes.loader = make('div', this.cssClasses.loading);
+    // this.nodes.imageGallery.appendChild(this.nodes.loader);
+    this.showSearchLoader(this.nodes.imageGallery);
   }
 
   /**
@@ -409,6 +422,15 @@ export default class ControlPanel {
       const query = this.nodes.searchInput.innerHTML;
       this.unsplashClient.searchImages(query,
         (results) => this.appendImagesToUnsplashGallery(results));
+    }, 1000);
+  }
+
+  performDefaultSearch() {
+    clearTimeout(this.searchTimeout);
+    this.searchTimeout = setTimeout(() => {
+      const query = this.nodes.searchInput0.innerHTML;
+      this.defaultClient.searchImages(query,
+        (results) => this.appendImagesToDefaultGallery(results));
     }, 1000);
   }
 
@@ -433,6 +455,22 @@ export default class ControlPanel {
     }
   }
 
+  appendImagesToDefaultGallery(results) {
+    this.nodes.imageGallery0.innerHTML = '';
+    if (results && results.length > 0) {
+      this.nodes.defaultPanel.classList.add(this.cssClasses.scroll);
+      results.forEach((image) => {
+        this.createDefaultThumbImage(image);
+      });
+    } else {
+      const noResults = make('div', this.cssClasses.noResults, {
+        innerHTML: 'No images found',
+      });
+      this.nodes.imageGallery0.appendChild(noResults);
+      this.nodes.defaultPanel.classList.remove(this.cssClasses.scroll);
+    }
+  }
+
   /**
    * Creates a thumb image and appends it to the image gallery
    *
@@ -452,6 +490,25 @@ export default class ControlPanel {
     imgWrapper.appendChild(img);
     imgWrapper.appendChild(imageCredits);
     this.nodes.imageGallery.append(imgWrapper);
+  }
+
+  createDefaultThumbImage(image) {
+    const imgWrapper = make('div', this.cssClasses.imgWrapper);
+    const img = make('img', this.cssClasses.thumb, {
+      src: image.uri,
+      onclick: () => this.onSelectSearchItem(image)
+    });
+
+    const { appName, user } = this.config.server;
+    const imageCredits = createServerImageCredits({
+      appName: appName,
+      author: user,
+      profileLink: "/" + user
+    });
+
+    imgWrapper.appendChild(img);
+    imgWrapper.appendChild(imageCredits);
+    this.nodes.imageGallery0.append(imgWrapper);
   }
 
   /**
@@ -480,15 +537,24 @@ export default class ControlPanel {
     this.unsplashClient.downloadImage(downloadLocation);
   }
 
+  onSelectSearchItem({title, uri}){
+    this.onSelectImage({
+      url: uri,
+      info: {
+        author: this.config.server.user,
+        profileLink: "/" + this.config.server.user,
+        provider: this.config.server.appName
+      },
+    });
+  }
+
   onUploaded(ctx, id, uri, author, authorName){
-    console.log(uri);
-    console.log(author);
     ctx.onSelectImage({
       url: uri,
       info: {
         author: author,
         profileLink: "/" + authorName,
-        provider: "server"
+        provider: this.config.server.appName
       }
     });
   }
