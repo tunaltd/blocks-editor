@@ -41,7 +41,9 @@ export default class DefaultClient {
     r.on('fileSuccess', function (file, message) {
       console.log("r.fileSuccess");
       const resultData = JSON.parse(message);
-      ctx.onUploaded(resultData.id, resultData.uri, ctx.username, ctx.username);
+      const prefix = "/" + ctx.username + "/image/";
+      const resizedUri = resultData.uri.replace(prefix, prefix + "1600x900/");
+      ctx.onUploaded(resultData.id, resizedUri, ctx.username, ctx.username);
     });
     r.on('fileProgress', function (file, chunk) {
       console.log('fileProgress');
