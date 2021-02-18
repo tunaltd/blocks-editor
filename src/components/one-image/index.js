@@ -73,7 +73,6 @@ export default class OneImage {
    * @returns {HTMLDivElement}
    */
   render() {
-    console.log("OneImage.render");
     return this.ui.render(this.data);
   }
 
