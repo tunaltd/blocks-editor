@@ -58,7 +58,7 @@ export const createUnsplashImageCredits = ({ appName, author, profileLink }) => 
     innerHTML: ' on ',
     style: 'display: inline;',
   });
-  const unsplashLink = make('a', '', {
+  const unsplashLink = make('a', 'app-name', {
     href: `https://unsplash.com/?utm_source=${appName}&utm_medium=referral`,
     innerHTML: 'Unsplash',
     target: '_blank',
@@ -86,7 +86,7 @@ export const createServerImageCredits = ({ appName, author, profileLink }) => {
     innerHTML: ' on ',
     style: 'display: inline;',
   });
-  const unsplashLink = make('a', '', {
+  const appLink = make('a', '', {
     href: `https://lore.chuci.info/?utm_source=${appName}&utm_medium=referral`,
     innerHTML: 'Lore',
     target: '_blank',
@@ -95,6 +95,6 @@ export const createServerImageCredits = ({ appName, author, profileLink }) => {
   wrapper.appendChild(by);
   wrapper.appendChild(authorProfileLink);
   wrapper.appendChild(on);
-  wrapper.appendChild(unsplashLink);
+  wrapper.appendChild(appLink);
   return wrapper;
 };

@@ -59,7 +59,7 @@ export default class Ui {
       config,
       readOnly,
       cssClasses: this.CSS,
-      onSelectImage: (imageData, apiKey) => this.selectImage(imageData, apiKey),
+      onSelectImage: (imageData) => this.selectImage(imageData),
     });
 
     this.tunes = new Tunes({
@@ -90,36 +90,42 @@ export default class Ui {
   render(data) {
     const wrapper = make('div', [this.CSS.baseClass, this.CSS.wrapper]);
     const loader = make('div', this.CSS.loading);
+    const image = make('img', '', {
+      onload: () => this.onImageLoad(), // will call this.nodes.wrapper & this.nodes.caption
+      onerror: () => this.onImageLoadError(),
+    });
     const caption = make('div', [this.CSS.input, this.CSS.caption], {
       contentEditable: !this.readOnly,
       innerHTML: data.caption || '',
     });
-    this.nodes.imageHolder = make('div', this.CSS.imageHolder);
-    const image = make('img', '', {
-      onload: () => this.onImageLoad(),
-      onerror: () => this.onImageLoadError(),
-    });
-    
     if(!this.readOnly)
       caption.dataset.placeholder = 'Enter a caption';
 
-    if (data.url) {
-      wrapper.appendChild(loader);
-      image.src = data.url;
-      this.buildImageCredits(data);
-    } else {
-      const controlPanelWrapper = this.controlPanel.render();
-      this.nodes.controlPanelWrapper = controlPanelWrapper;
-      wrapper.appendChild(controlPanelWrapper);
-    }
+    this.nodes.imageHolder = make('div', this.CSS.imageHolder);
 
     this.nodes.wrapper = wrapper;
     this.nodes.loader = loader;
     this.nodes.image = image;
     this.nodes.caption = caption;
 
-    this.applySettings(data);
-
+    try{
+      if (data.url) {
+        wrapper.appendChild(loader);
+        image.src = data.url;
+        this.buildImageCredits(data);
+      }
+      else if(!this.readOnly) {
+        const controlPanelWrapper = this.controlPanel.render();
+        this.nodes.controlPanelWrapper = controlPanelWrapper;
+        wrapper.appendChild(controlPanelWrapper);
+      }
+  
+      if(!this.readOnly)
+        this.applySettings(data);
+    }
+    catch(error){
+      console.log(error);
+    }
     return wrapper;
   }
 
@@ -131,16 +137,20 @@ export default class Ui {
    */
   buildImageCredits(imageData) {
     const info = imageData.info;
+    // console.log("buildImageCredits: imageData = ");
+    // console.log(imageData);
     if (info && info.author && info.profileLink) {
-      const provider = info.provider;//, data.info.provider
-      const { appName } = this.config[provider];
+      const provider = info.provider === "unsplash" ? "unsplash" : "server";//, data.info.provider
+      // console.log(this.config);
+      // const { appName } = this.config[provider];
+      const appName = info.provider;
       let credits;// = createUnsplashImageCredits({ ...info, appName });
-      console.log("buildImageCredits.provider: " + provider);
       if(provider === "unsplash")
         credits = createUnsplashImageCredits({ ...info, appName });
-      else if(provider === "server")
+      else
         credits = createServerImageCredits({ ...info, appName });
       
+      console.log(credits);
       if(!credits)
         return;
       
@@ -156,10 +166,15 @@ export default class Ui {
    * @returns {void}
    */
   onImageLoad() {
-    this.nodes.imageHolder.prepend(this.nodes.image);
-    this.nodes.wrapper.appendChild(this.nodes.imageHolder);
-    this.nodes.wrapper.appendChild(this.nodes.caption);
-    this.nodes.loader.remove();
+    try{
+      this.nodes.imageHolder.prepend(this.nodes.image);
+      this.nodes.wrapper.appendChild(this.nodes.imageHolder);
+      this.nodes.wrapper.appendChild(this.nodes.caption);
+      this.nodes.loader.remove();
+    }
+    catch(error){
+      console.log(error);
+    }
   }
 
   /**

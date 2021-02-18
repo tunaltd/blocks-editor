@@ -32,10 +32,14 @@
   opacity: 0;
 }
 
+.inline-image__picture {
+  text-align: center;
+}
+
 .inline-image__picture--withBackground {
   background: #eff2f5;
   padding: 10px;
-  text-align: center;
+  /* text-align: center; */
 }
 
 .inline-image__picture--withBackground img {
@@ -142,6 +146,10 @@
   width: 100%;
   text-align: center;
   margin: 20px;
+}
+
+.app-name{
+  text-transform: capitalize;
 }
 
 .hidden {

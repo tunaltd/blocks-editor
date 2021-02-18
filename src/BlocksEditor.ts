@@ -1,5 +1,4 @@
 'use strict';
-
 import EditorJS, { BlockAPI, OutputData } from '@editorjs/editorjs';
 const Paragraph = require('@editorjs/paragraph');
 const Header = require('@editorjs/header');
@@ -19,10 +18,9 @@ const Personality = require('@editorjs/personality');
 import OneImage from './components/one-image';
 import TextSpolier from './components/editorjs-inline-spoiler-tool';//const TextSpoiler = require('editorjs-inline-spoiler-tool');
 import MarkdownBlock from './components/markdown-block';
-import Hyperlink from './components/editorjs-hyperlink';
+import HyperlinkBlock from './components/editorjs-hyperlink';
 import _ from 'lodash';
-
-//import * as _ from 'lodash';
+import BlocksUtility from "./BlocksUtility";
 
 class BlockIdCache{
     id: string;
@@ -68,6 +66,8 @@ export class EditorOptions{
 }
 
 export class BlocksEditor {
+    static readonly Utility = BlocksUtility;
+
     readonly BlockElementIdPrefix: string = "block_";
     blocksIdsCache: Array<BlockIdCache>;
 
@@ -92,6 +92,7 @@ export class BlocksEditor {
     }
 
     private initialize(defaultContent: OutputData){
+        const editorOptions = this.options;
         const ctx = this;
         this.editor = new EditorJS({
             holder: this.eleId,
@@ -113,8 +114,8 @@ export class BlocksEditor {
                     class: OneImage,
                     inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker'],
                     config: {
-                        server: this.options.api ? this.options.api.server : undefined,
-                        unsplash: this.options.api ? this.options.api.unsplash : undefined,
+                        server: editorOptions.api ? editorOptions.api.server : undefined,
+                        unsplash: editorOptions.api ? editorOptions.api.unsplash : undefined,
                         supportEmbedUrl: true
                     }
                 },
@@ -152,7 +153,7 @@ export class BlocksEditor {
                     shortcut: 'CMD+SHIFT+C'
                 },
                 hyperlink: { // Error
-                    class: Hyperlink,
+                    class: HyperlinkBlock,
                     config: {
                         target: '_blank', // default null
                         rel: 'nofollow', // default null
@@ -182,7 +183,7 @@ export class BlocksEditor {
                     shortcut: 'CMD+ALT+T'
                 },
                 textSpolier: TextSpolier,
-                mdBlock: MarkdownBlock, // ATTENTION: markdown-it
+                markdownBlock: MarkdownBlock, // ATTENTION: markdown-it
                 // loreMind: FEF.Modules.LoreCard_Mind,
                 // loreSection: FEF.Modules.LoreCard_Section,
                 // loreList: FEF.Modules.LoreCard_List
@@ -258,71 +259,4 @@ export class BlocksEditor {
         return data;
     }
 
-    public getImages(): Array<ImageData> {
-        const count = this.editor.blocks.getBlocksCount();
-        const result = new Array<ImageData>();
-        for(let i = 0; i < count; i++){
-            const block = this.editor.blocks.getBlockByIndex(i) as BlockAPI;
-            if(block){ //  && !block.id
-                const blockHolder = block.holder; // .ce-block element, that wraps plugin contents
-                const allImgs = blockHolder.querySelectorAll("img");
-                if(allImgs){
-                    allImgs.forEach(ae => {
-                        const d = {
-                            title: ae.title,
-                            uri: ae.src
-                        };
-                        if(!ae.title){
-                            const caption = blockHolder.querySelector("div.inline-image__caption");
-                            if(caption)
-                                d.title = caption.innerHTML;
-                        }
-                        const index = _.findIndex(result, item => item.uri === d.uri);
-                        if(index < 0)
-                            result.push(d);
-                    });
-                }
-            }
-        } // for
-        return result;
-    }
-
-    public getHyperlinks(): Array<HyperlinkData> {
-        const count = this.editor.blocks.getBlocksCount();
-        const result = new Array<HyperlinkData>();
-        for(let i = 0; i < count; i++){
-            const block = this.editor.blocks.getBlockByIndex(i) as BlockAPI;
-            if(block){ //  && !block.id
-                const blockHolder = block.holder; // .ce-block element, that wraps plugin contents
-                const allAs = blockHolder.querySelectorAll("a");
-                if(allAs){
-                    allAs.forEach(ae => {
-                        const d = {
-                            name: ae.innerHTML,
-                            title: ae.title,
-                            uri: ae.href,
-                            rel: ae.rel
-                        };
-                        const index = _.findIndex(result, item => item.uri === d.uri);
-                        if(index < 0)
-                            result.push(d);
-                    });
-                }
-            }
-        } // for
-        return result;
-    }
-
-}
-
-export class ImageData{
-    title: string;
-    uri: string;
-}
-
-export class HyperlinkData{
-    name: string;
-    title: string;
-    uri: string;
-    rel: string;
 }

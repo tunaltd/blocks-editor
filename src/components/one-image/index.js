@@ -43,7 +43,7 @@ export default class OneImage {
    *   api - Editor.js API
    *   readOnly - read-only mode flag
    */
-  constructor({ data, config, api, readOnly }) {
+  constructor({ data, api, config, readOnly }) {
     this.api = api;
 
     this.readOnly = readOnly;
@@ -73,6 +73,7 @@ export default class OneImage {
    * @returns {HTMLDivElement}
    */
   render() {
+    console.log("OneImage.render");
     return this.ui.render(this.data);
   }
 
@@ -239,6 +240,7 @@ export default class OneImage {
     const value = !this.data[tuneName];
     this.data = { [tuneName]: value };
     this.ui.applyTune(tuneName, value);
+    //this.stretched = value; // not work
   }
 
   /**

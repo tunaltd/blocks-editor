@@ -19,7 +19,7 @@ export default class ControlPanel {
    *  onSelectImage - Image selection callback
    */
   constructor({
-    api, config, cssClasses, onSelectImage, readOnly,
+    api, config, readOnly, cssClasses, onSelectImage, 
   }) {
     this.api = api;
     this.config = config;

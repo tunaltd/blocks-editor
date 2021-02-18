@@ -15,9 +15,41 @@
     <script type="text/javascript" src="https://cdn.metroui.org.ua/v4/js/metro.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/markdown-it@12.0.4/dist/markdown-it.min.js"></script>
     <script type="text/javascript" src="../lib/editor.js?v=20210114"></script>
-    <script type="text/javascript" src="../dist/blocks-editor.js?v=202102041751"></script>
+    <script type="text/javascript" src="../dist/blocks-editor.js?v=202102181218"></script>
     <script>
-      const blocksEditor = new BlocksEditor("app", { blocks: [] }, {
+      const blocksEditor = new BlocksEditor("app", {
+                time: 1613468694945,
+                blocks: [
+                    {
+                        id: "39d22ea9bd66410a84c3b2e0a3427ff8",
+                        type: "oneimage",
+                        data: {
+                            url: "https://robohash.org/jerin.png",
+                            caption: "",
+                            withBorder: false,
+                            withBackground: false,
+                            stretched: false,
+                            info: {
+                                "author": "jerin",
+                                "profileLink": "/jerin",
+                                "provider": "Lore"
+                            }
+                        }
+                    }
+                ],
+                version: "2.19.1"
+            },
+      {
+        api: {
+          server: {
+              appName: "Lore",
+              clientKey: "0000000",
+              enderpointSearch: "/api/v1/image/search/1600x900",
+              enderpointUpload: "/manage/upload/image",
+              user: "jerin"
+          }
+        },
+        readOnly: true,
         onCurrentBlockChanged: (blockId, blockIndex) => {
           console.log("Current block id: "+ blockId);
         }
