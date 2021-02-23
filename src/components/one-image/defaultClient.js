@@ -40,6 +40,7 @@ export default class DefaultClient {
     const r = this.uploader;
     r.on('fileSuccess', function (file, message) {
       console.log("r.fileSuccess");
+      console.log(message);
       const resultData = JSON.parse(message);
       const prefix = "/" + ctx.username + "/image/";
       const resizedUri = resultData.uri.replace(prefix, prefix + "1600x900/");

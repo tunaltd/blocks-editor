@@ -126,7 +126,7 @@ export default class BlocksUtility{
                 htmlObject.innerHTML = obd.data.caption;
                 break;
             case "paragraph":
-                htmlObject.innerHTML = obd.data;
+                htmlObject.innerHTML = obd.data.text;
                 break;
             case "quote":
                 htmlObject.innerHTML = obd.data.caption + " ... " + obd.data.text;

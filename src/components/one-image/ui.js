@@ -150,7 +150,6 @@ export default class Ui {
       else
         credits = createServerImageCredits({ ...info, appName });
       
-      console.log(credits);
       if(!credits)
         return;
       
