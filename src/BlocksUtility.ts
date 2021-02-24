@@ -74,7 +74,7 @@ export default class BlocksUtility{
         return result;
     }
 
-    static processHyperLinks(htmlObject: HTMLElement): Array<HyperLink>{
+    static processHyperLinks(blockId: string, htmlObject: HTMLElement): Array<HyperLink>{
         const result = new Array<HyperLink>();
         if(!htmlObject)
             return result;
@@ -86,9 +86,14 @@ export default class BlocksUtility{
                     return v.uri === d.uri;
                 });
                 if(index < 0){
+                    d.blocks.push(blockId);
                     result.push(d);
                 }
                 else{
+                    const blocks = result[index].blocks;
+                    if(blocks.indexOf(blockId) < 0)
+                        blocks.push(blockId);
+                    d.blocks = blocks;
                     result[index] = d;
                 }
             });
@@ -142,7 +147,7 @@ export default class BlocksUtility{
                 htmlObject.innerHTML = tableTxt;
                 break;
         }
-        result = BlocksUtility.processHyperLinks(htmlObject);
+        result = BlocksUtility.processHyperLinks(obd.id, htmlObject);
         return result;
     }
 
