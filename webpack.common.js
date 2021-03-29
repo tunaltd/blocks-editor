@@ -17,7 +17,25 @@ module.exports = {
           'style-loader',
           'css-loader'
         ]
-      }
+      },
+      {
+        test: /\.pcss$/,
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [
+                  require('postcss-nested-ancestors'),
+                  require('postcss-nested'),
+                ],
+              },
+            },
+          },
+        ],
+      },
       // {
       //   test: /\.svg$/,
       //   type: 'asset/inline',

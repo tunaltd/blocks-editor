@@ -13,7 +13,7 @@ const Alert = require('editorjs-alert');
 const Embed = require('@editorjs/embed');
 const Table = require('@editorjs/table');
 const Checklist = require('@editorjs/checklist');
-const List = require('@editorjs/list');//import List from '@editorjs/list';
+import NestedList from './components/nested-list';//const List = require('@editorjs/list');
 const Personality = require('@editorjs/personality');
 import OneImage from './components/one-image';
 import TextSpolier from './components/editorjs-inline-spoiler-tool';//const TextSpoiler = require('editorjs-inline-spoiler-tool');
@@ -120,7 +120,7 @@ export class BlocksEditor {
                     }
                 },
                 list: {
-                    class: List,
+                    class: NestedList,
                     inlineToolbar: ['bold', 'italic', 'hyperlink', 'marker'],
                     shortcut: 'CMD+SHIFT+L'
                 },
