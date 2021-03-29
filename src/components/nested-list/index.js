@@ -106,6 +106,7 @@ export default class NestedList {
         //this.data = data && Object.keys(data).length ? data : initialData;
         this.data = initialData;
         if(data && data.items && data.items.length > 0){
+            this.data.style = data.style;
             const item0 = data.items[0];
             if(typeof item0 === "object")
                 this.data.items = data.items;
